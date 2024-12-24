@@ -1,4 +1,4 @@
-const { ActionRowBuilder, StringSelectMenuBuilder, EmbedBuilder } = require('discord.js');
+const { ActionRowBuilder, StringSelectMenuBuilder, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -6,11 +6,10 @@ module.exports = {
   name: 'ayarmenü',
   description: 'Config ayarlarını menü ile değiştirir.',
   async execute(interaction) {
-    if (!interaction.member.permissions.has("ADMINISTRATOR")) {
+    if (!interaction.member.permissions.has('ADMINISTRATOR')) {
       return interaction.reply({ content: 'Bu komutu kullanmak için yönetici olmalısınız!', ephemeral: true });
     }
 
-    
     const options = [
       { label: "Ön eki değiştir", value: "prefix" },
       { label: "Botun aktivitesini değiştir", value: "Aktivite" },
@@ -48,44 +47,51 @@ module.exports = {
 
     await interaction.reply({ embeds: [embed], components: [row], ephemeral: true });
   },
-};
 
+  async selectHandler(interaction) {
+    const selectedKey = interaction.values[0];
+    const modal = new ModalBuilder()
+      .setCustomId(`configModal-${selectedKey}`)
+      .setTitle(`🔧 ${selectedKey} Ayarı`);
 
-module.exports.selectHandler = async (interaction) => {
-  const configPath = path.resolve(__dirname, '../config.json');
-  const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-  const selectedKey = interaction.values[0];
+    const textInput = new TextInputBuilder()
+      .setCustomId('configValue')
+      .setLabel(`${selectedKey} için yeni değer girin:`)
+      .setStyle(TextInputStyle.Short)
+      .setRequired(true);
 
-  const modal = {
-    title: `🔧 ${selectedKey} Ayarı`,
-    custom_id: 'configModal',
-    components: [
-      {
-        type: 1,
-        components: [
-          {
-            type: 4,
-            custom_id: 'configValue',
-            label: `${selectedKey} için yeni değer girin:`,
-            style: 1,
-            required: true,
-          },
-        ],
-      },
-    ],
-  };
+    const row = new ActionRowBuilder().addComponents(textInput);
+    modal.addComponents(row);
 
-  await interaction.showModal(modal);
+    await interaction.showModal(modal);
 
-  
-  interaction.client.once('interactionCreate', async (modalInteraction) => {
-    if (!modalInteraction.isModalSubmit()) return;
-    const newValue = modalInteraction.fields.getTextInputValue('configValue');
+    try {
+      const modalInteraction = await interaction.awaitModalSubmit({
+        filter: (i) => i.customId.startsWith('configModal') && i.user.id === interaction.user.id,
+        time: 60000,
+      });
+
+      if (!modalInteraction) {
+        throw new Error('Modal submission not received or timed out.');
+      }
+
+      const configPath = path.resolve(__dirname, '../config.json');
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+
+      const newValue = modalInteraction.fields.getTextInputValue('configValue');
+      config[selectedKey] = newValue;
+
+      fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf-8');
+
+      await modalInteraction.reply({
+        content: `✅ \`${selectedKey}\` başarıyla güncellendi: \`${newValue}\``,
+        ephemeral: true,
+      });
 
     
-    config[selectedKey] = newValue;
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf-8');
-
-    await modalInteraction.reply({ content: `✅ \`${selectedKey}\` başarıyla güncellendi: \`${newValue}\``, ephemeral: true });
-  });
+    } catch (err) {
+      
+      console.log(`Ayar Güncellendi ... Restart Atmayı Unutma`)
+    }
+  },
 };
