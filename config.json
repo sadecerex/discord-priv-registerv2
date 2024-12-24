@@ -1,0 +1,34 @@
+{
+    "token" : "",
+    "prefix" : "!",
+    "Aktivite" : "https://sadecerex.com/",
+    "AktiviteURL" : "https://twitch.tv/xxx",
+    "kayitli" : "",
+    "kayitsiz" : "",
+    "vip" : "",
+    "rexstaff": "",
+    "ucube" : "",
+    "booster" : "",
+    "emojitik" : "<a:rexdev:1294016557122326589>",
+    "ucubegif" : "https://j.gifs.com/Mj9D5.gif",
+    "rexhelpgif" : "https://i.hizliresim.com/5eappo9.gif",
+    "rexfooter" : "https://sadecerex.com/",
+    "mongodb" : "",
+    "denetimlog" : "",
+    "rolver1" : "",
+    "rolver2" : "",
+    "rolver3" : "",
+    "rolver4" : "",
+    "rolver5" : "",
+    "rolver6" : "",
+    
+    "notlar": {
+        "token": "Tokeni Mutlaka Doldurun",
+        "prefix": "Botun Komutlarında Kullanacağınız Ön EK (.) (!) ... ",
+        "Aktivite": "Botun Aktivite Kısmı.",
+        "rexstaff": "Kayıt ve Rol verme Alma Gibi Komutları Kullanabilecek Yetkili İD.",
+        "rolver1": "rolver komutundaki rollerin id kısımları mutlaka doldurun.",
+        "emojitik" : "Botun Kayıt ve vip komutlarında tepki verdiği emoji id kısmıdır örnek olarak dolu bıraktım..."
+
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "name": "discord-priv-registerv2",
+    "version": "1.0.0",
+    "description": "@sadecerex priv register v2",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "discord.js": "^14.16.3",
+        "fs" : "",
+        "mongoose": "8.9.2"
+    },
+    "author": "@sadecerex",
+    "license": "ISC"
+}

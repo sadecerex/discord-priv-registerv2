@@ -1,0 +1,9 @@
+@echo off
+color a
+title Rex Private Register Bot ...
+:loop
+echo Bot Baslatiliyor...
+node index.js
+echo Ufak Bir Sorun Tespit Edildi Restart Atıyorum ...
+timeout /t 5
+goto loop
